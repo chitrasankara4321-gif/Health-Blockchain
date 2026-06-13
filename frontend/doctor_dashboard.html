@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthChain - Doctor Dashboard v2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: white;
+            font-size: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-info {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .patient-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .patient-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .patient-card:hover {
+            background: #edf2ff;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .patient-card.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .patient-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .patient-details {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .file-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .file-item {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            background: #edf2ff;
+            border-color: #667eea;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .file-meta {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .emergency-section {
+            background: #fff5f5;
+            border: 2px solid #feb2b2;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none; /* Hidden - emergency access removed */
+        }
+
+        .emergency-title {
+            color: #c53030;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .emergency-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 10rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2d3748;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+        }
+
+        .alert-error {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+        }
+
+        .alert-warning {
+            background: #fffbf0;
+            border: 1px solid #fbd38d;
+            color: #c05621;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Only - No Login Screen -->
+    <div id="dashboard">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">H</div>
+                <span>HealthChain</span>
+            </div>
+            <div class="user-info">
+                <div class="user-details">
+                    <div class="user-name" id="userName">Loading...</div>
+                    <div class="user-role" id="userRole">Doctor Portal</div>
+                </div>
+                <button class="btn btn-danger" onclick="logout()">🚪 Logout</button>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="patientCount">0</div>
+                    <div class="stat-label">Assigned Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="fileCount">0</div>
+                    <div class="stat-label">Medical Records</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="accessCount">0</div>
+                    <div class="stat-label">Access Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">✅</div>
+                    <div class="stat-label">System Secure</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-title">
+                        <span>👥</span> Available Patients
+                    </div>
+                    <div class="patient-list" id="patientList">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            Loading available patients...
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <span>📋</span> Medical Records
+                        <span id="selectedPatientName" style="margin-left: auto; font-size: 1rem; color: #718096;"></span>
+                    </div>
+                    <div class="file-list" id="fileList">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            Select a patient to view records
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let selectedPatient = null;
+
+        // Check if user is already logged in
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/profile', {
+    credentials: 'include'
+});
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    if (currentUser.role === 'doctor') {
+                        showDashboard();
+                    } else {
+                        // Redirect to main login if not a doctor
+                        window.location.href = '/login.html';
+                    }
+                } else {
+                    // Redirect to main login if not authenticated
+                    window.location.href = '/login.html';
+                }
+            } catch (error) {
+                // Redirect to main login on error
+                window.location.href = '/login.html';
+            }
+        }
+
+        function showDashboard() {
+            // Dashboard is always visible now, just update content
+            
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userRole').textContent = 
+                    currentUser.department || currentUser.role || 'Doctor';
+                loadPatients();
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+                currentUser = null;
+                // Redirect to main login page
+                window.location.href = '/login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Still redirect on error
+                window.location.href = '/login.html';
+            }
+        }
+
+        async function loadPatients() {
+            try {
+                const response = await fetch('/api/doctor/patients', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                const patientList = document.getElementById('patientList');
+                patientList.innerHTML = '';
+                
+                // Load all available patients
+                const usersResponse = await fetch('/api/profile', {
+                    credentials: 'include'
+                });
+                const userData = await usersResponse.json();
+                
+                // Get all patients (in real system, this would be from API)
+                const allPatients = [
+                    { id: 'pat_001', name: 'Alice Thompson', dob: '1990-05-15', blood_type: 'O+' },
+                    { id: 'pat_002', name: 'Bob Martinez', dob: '1985-08-22', blood_type: 'A+' }
+                ];
+                
+                // Filter to show assigned patients and available patients
+                const assignedPatients = data.patients || [];
+                const assignedIds = assignedPatients.map(p => p.id);
+                
+                // Show assigned patients first
+                if (assignedPatients.length > 0) {
+                    document.getElementById('patientCount').textContent = assignedPatients.length;
+                    
+                    assignedPatients.forEach(patient => {
+                        const patientCard = document.createElement('div');
+                        patientCard.className = 'patient-card active';
+                        patientCard.innerHTML = `
+                            <div class="patient-name">${patient.name} ✅</div>
+                            <div class="patient-details">
+                                ID: ${patient.id} | DOB: ${patient.dob || 'N/A'} | Blood: ${patient.blood_type || 'N/A'}
+                            </div>
+                        `;
+                        patientCard.onclick = () => selectPatient(patient);
+                        patientList.appendChild(patientCard);
+                    });
+                }
+                
+                // Show available patients (not assigned)
+                allPatients.forEach(patient => {
+                    if (!assignedIds.includes(patient.id)) {
+                        const patientCard = document.createElement('div');
+                        patientCard.className = 'patient-card';
+                        patientCard.innerHTML = `
+                            <div class="patient-name">${patient.name}</div>
+                            <div class="patient-details">
+                                ID: ${patient.id} | DOB: ${patient.dob} | Blood: ${patient.blood_type}
+                            </div>
+                        `;
+                        patientCard.onclick = () => showRequestAccessDialog(patient);
+                        patientList.appendChild(patientCard);
+                    }
+                });
+                
+                if (assignedPatients.length === 0 && allPatients.length === 0) {
+                    patientList.innerHTML = '<div style="text-align: center; color: #718096;">No patients available</div>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading patients:', error);
+                document.getElementById('patientList').innerHTML = '<div style="color: #e53e3e;">Error loading patients</div>';
+            }
+        }
+
+        function showRequestAccessDialog(patient) {
+            const reason = prompt(`Request access to ${patient.name}'s medical records.\n\nPlease provide a reason for access:`);
+            if (reason) {
+                requestAccess(patient.id, reason);
+            }
+        }
+
+        async function requestAccess(patientId, reason) {
+            try {
+                const response = await fetch('/api/doctor/request_access', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        patient_id: patientId,
+                        reason: reason,
+                        duration_days: 30
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('loginAlert', 'Access request sent to patient. Waiting for approval...', 'success');
+                    // Reload patients to update UI
+                    setTimeout(loadPatients, 1000);
+                } else {
+                    showAlert('loginAlert', data.error || 'Failed to request access', 'error');
+                }
+            } catch (error) {
+                console.error('Request access error:', error);
+                showAlert('loginAlert', 'Failed to request access', 'error');
+            }
+        }
+
+        async function selectPatient(patient) {
+            selectedPatient = patient;
+            
+            // Update UI
+            document.querySelectorAll('.patient-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.patient-card').classList.add('active');
+            
+            document.getElementById('selectedPatientName').textContent = `- ${patient.name}`;
+            
+            // Load patient files
+            await loadPatientFiles(patient.id);
+        }
+
+        async function loadPatientFiles(patientId) {
+            try {
+                const response = await fetch(`/api/doctor/patient/${patientId}/files`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                const fileList = document.getElementById('fileList');
+                fileList.innerHTML = '';
+                
+                if (data.files && data.files.length > 0) {
+                    document.getElementById('fileCount').textContent = data.files.length;
+                    
+                    data.files.forEach(file => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        fileItem.innerHTML = `
+                            <div class="file-info">
+                                <div class="file-name">${file.filename}</div>
+                                <div class="file-meta">
+                                    Size: ${formatFileSize(file.size)} | Uploaded: ${new Date(file.upload_date).toLocaleDateString()}
+                                </div>
+                            </div>
+                            <div class="file-actions">
+                                <button class="btn btn-info btn-small" onclick="viewFileDetails('${file.hash}', '${file.filename}')">
+                                    👁️ View Details
+                                </button>
+                                <span style="color: #718096; font-size: 0.8rem; margin-left: 0.5rem;">
+                                    🔒 View Only
+                                </span>
+                            </div>
+                        `;
+                        fileList.appendChild(fileItem);
+                    });
+                } else {
+                    fileList.innerHTML = '<div style="text-align: center; color: #718096;">No medical records found</div>';
+                }
+            } catch (error) {
+                console.error('Error loading files:', error);
+                document.getElementById('fileList').innerHTML = '<div style="color: #e53e3e;">Error loading files</div>';
+            }
+        }
+
+        async function viewFileDetails(fileHash, fileName) {
+            try {
+                const response = await fetch(`/api/doctor/view/${fileHash}`, {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const fileInfo = data.file_info;
+                        const details = `
+                            📄 FILE DETAILS
+                            ==================
+                            
+                            📋 File Information:
+                            • File Name: ${fileName}
+                            • File ID: ${fileHash.substring(0, 8)}...
+                            • File Size: ${formatFileSize(fileInfo.file_size)}
+                            • Upload Date: ${new Date(fileInfo.upload_timestamp).toLocaleString()}
+                            • Patient ID: ${fileInfo.patient_id}
+                            
+                            🔒 ACCESS LEVEL:
+                            • Status: ${fileInfo.access_level}
+                            • Security: ${fileInfo.security_note}
+                            
+                            📊 AUDIT INFO:
+                            • Access logged for security compliance
+                            • View-only access enforced
+                            • No download capability available
+                        `;
+                        
+                        alert(details);
+                        
+                        // Update access count
+                        const accessCount = document.getElementById('accessCount');
+                        accessCount.textContent = parseInt(accessCount.textContent) + 1;
+                        
+                        showAlert('loginAlert', 'File details viewed successfully - View only access', 'success');
+                    } else {
+                        showAlert('loginAlert', data.error || 'Failed to view file details', 'error');
+                    }
+                } else {
+                    const error = await response.json();
+                    showAlert('loginAlert', error.error || 'Access denied', 'error');
+                }
+            } catch (error) {
+                console.error('View file error:', error);
+                showAlert('loginAlert', 'Failed to view file details. Please try again.', 'error');
+            }
+        }
+
+        async function viewFileDetails(fileHash, fileName) {
+            try {
+                const response = await fetch(`/api/doctor/view/${fileHash}`, {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const fileInfo = data.file_info;
+                        
+                        // Create a modal-like display with file information
+                        const details = `
+                            📄 FILE DETAILS
+                            ==================
+                            
+                            📋 File Information:
+                            • File Name: ${fileName}
+                            • File ID: ${fileHash.substring(0, 8)}...
+                            • File Size: ${formatFileSize(fileInfo.file_size)}
+                            • Upload Date: ${new Date(fileInfo.upload_timestamp).toLocaleString()}
+                            • Patient ID: ${fileInfo.patient_id}
+                            • File Type: ${fileInfo.file_type}
+                            • Extension: ${fileInfo.file_extension}
+                            
+                            🔒 ACCESS LEVEL:
+                            • Status: ${fileInfo.access_level}
+                            • Security: ${fileInfo.security_note}
+                            
+                            📊 AUDIT INFO:
+                            • Access logged for security compliance
+                            • View-only access enforced
+                            • No download capability available
+                            
+                            🏥 MEDICAL COMPLIANCE:
+                            • HIPAA compliant viewing
+                            • Audit trail maintained
+                            • Secure access protocol
+                        `;
+                        
+                        alert(details);
+                        
+                        // Update access count
+                        const accessCount = document.getElementById('accessCount');
+                        accessCount.textContent = parseInt(accessCount.textContent) + 1;
+                        
+                        showAlert('loginAlert', 'File details viewed successfully - View only access', 'success');
+                    } else {
+                        showAlert('loginAlert', data.error || 'Failed to view file details', 'error');
+                    }
+                } else {
+                    const error = await response.json();
+                    showAlert('loginAlert', error.error || 'Access denied', 'error');
+                }
+            } catch (error) {
+                console.error('View file error:', error);
+                showAlert('loginAlert', 'Failed to view file details. Please try again.', 'error');
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showAlert(elementId, message, type) {
+            const alertElement = document.getElementById(elementId);
+            alertElement.className = `alert alert-${type}`;
+            alertElement.textContent = message;
+            alertElement.style.display = 'block';
+            
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>

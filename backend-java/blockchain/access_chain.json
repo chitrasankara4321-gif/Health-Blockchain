@@ -1,0 +1,13 @@
+[ {
+  "index" : 0,
+  "timestamp" : "2026-06-13T12:56:56.7483614",
+  "access_grant" : {
+    "doctor_id" : "genesis",
+    "patient_id" : "genesis",
+    "file_hash" : "genesis",
+    "permissions" : [ "read", "write" ],
+    "expires" : null
+  },
+  "previous_hash" : "0",
+  "hash" : "72455a6123fffad726dc60bcfb8be138b686aec990e36dfdef6b7d9316cf1677"
+} ]

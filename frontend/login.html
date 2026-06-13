@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthChain - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-title h2 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-title p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group input {
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .demo-accounts {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .demo-accounts h4 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-accounts .account {
+            margin-bottom: 0.25rem;
+            color: #4a5568;
+        }
+
+        .demo-accounts .account strong {
+            color: #2d3748;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+        }
+
+        .alert-error {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+        }
+
+        .user-type-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-type-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-type-btn.active {
+            border-color: #667eea;
+            background: #edf2ff;
+        }
+
+        .user-type-btn:hover {
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-icon">H</div>
+            <div class="logo-text">HealthChain</div>
+        </div>
+        
+        <div class="login-title">
+            <h2>Secure Healthcare Login</h2>
+            <p>Patient & Doctor Portal</p>
+        </div>
+        
+        <div id="loginAlert"></div>
+        
+        <div class="user-type-selector">
+            <button class="user-type-btn active" onclick="selectUserType('doctor')">👨‍⚕️ Doctor</button>
+            <button class="user-type-btn" onclick="selectUserType('patient')">👤 Patient</button>
+        </div>
+        
+        <form class="login-form" onsubmit="login(event)">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" required placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn btn-primary">🔐 Secure Login</button>
+        </form>
+        
+        <div class="demo-accounts">
+            <h4>Demo Accounts:</h4>
+            <div class="account"><strong>Doctor:</strong> dr_wilson / doc123456</div>
+            <div class="account"><strong>Patient 1:</strong> alice_patient / pat123456</div>
+            <div class="account"><strong>Patient 2:</strong> bob_patient / pat123456</div>
+        </div>
+    </div>
+
+    <script>
+        let selectedUserType = 'doctor';
+
+        function selectUserType(type) {
+            selectedUserType = type;
+            
+            // Update button states
+            document.querySelectorAll('.user-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update placeholder
+            const usernameInput = document.getElementById('username');
+            if (type === 'doctor') {
+                usernameInput.placeholder = 'dr_wilson';
+            } else {
+                usernameInput.placeholder = 'alice_patient or bob_patient';
+            }
+        }
+
+        async function login(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const user = data.user;
+                    
+                    // Redirect based on user role
+                    if (user.role === 'patient') {
+                        window.location.href = '/patient_dashboard.html';
+                    } else if (user.role === 'doctor') {
+                        window.location.href = '/doctor_dashboard.html';
+                    } else {
+                        showAlert('loginAlert', 'Unknown user role', 'error');
+                    }
+                } else {
+                    showAlert('loginAlert', data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showAlert('loginAlert', 'Connection error. Please try again.', 'error');
+            }
+        }
+
+        function showAlert(elementId, message, type) {
+            const alertElement = document.getElementById(elementId);
+            alertElement.className = `alert alert-${type}`;
+            alertElement.textContent = message;
+            alertElement.style.display = 'block';
+            
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize
+        document.getElementById('username').placeholder = 'dr_wilson';
+    </script>
+</body>
+</html>

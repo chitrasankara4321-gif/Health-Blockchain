@@ -1,0 +1,25 @@
+# Python & Backend
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Java & Spring Boot
+target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+
+# Application Storage & Sensitive Data
+users/
+storage/
+audit_logs/
+blockchain/access_chain.json
+blockchain/access_contracts.json
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+.DS_Store

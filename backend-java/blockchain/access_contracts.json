@@ -1,0 +1,29 @@
+{
+  "patient_consent" : {
+    "description" : "Patient grants access to doctor",
+    "terms" : {
+      "duration_max" : "90_days",
+      "revocable" : true,
+      "audit_required" : true,
+      "emergency_override" : true
+    }
+  },
+  "doctor_access" : {
+    "description" : "Doctor requests patient data access",
+    "terms" : {
+      "justification_required" : true,
+      "department_verification" : true,
+      "license_valid" : true,
+      "audit_trail" : true
+    }
+  },
+  "emergency_access" : {
+    "description" : "Emergency break-glass access",
+    "terms" : {
+      "time_limit" : "1_hour",
+      "admin_notification" : true,
+      "post_review" : true,
+      "auto_revoke" : true
+    }
+  }
+}
